@@ -1,3 +1,18 @@
+
+## How to start dogadamy
+- clone repo
+- type to docker up  : ./vendor/bin/sail up 
+- your webpage is: http://localhost:82/
+- db on port : 3307
+- cd ./dogadamy/storage
+- chmod -R 777 logs/
+- chmod -R 777 framework/
+
+-- php artisan migrate
+-- php artisan db:seed --class=LocaleSeeder
+-- php artisan db:seed --class=CategoriesSeeder
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
