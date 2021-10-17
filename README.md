@@ -1,16 +1,51 @@
 
 ## How to start dogadamy
 - clone repo
-- type to docker up  : ./vendor/bin/sail up 
-- your webpage is: http://localhost:82/
-- db on port : 3307
-- cd ./dogadamy/storage
-- chmod -R 777 logs/
-- chmod -R 777 framework/
+- docker up  : ./vendor/bin/sail up 
+- strona na porcie 82 : http://localhost:82/
 
--- php artisan migrate
--- php artisan db:seed --class=LocaleSeeder
--- php artisan db:seed --class=CategoriesSeeder
+- Uwaga::jesli bedziesz testowal z poziomu Postmana albo innego klienta to trzeba z pliku .env odkomentowac linie:
+- DB_HOST=dogadamy_mysql_1 (nazwa ta to nazwa kontenera sql na dockerze, jest jakis issue laravelowy ze innaczej nie dziala) 
+- i zakomentowac linie: 
+- DB_HOST=127.0.0.1 
+- podobna uwaga ponizej jak chce sie testowac z poziomu testow
+
+- api endpoints: http://localhost:82/api/categories/[locale]
+- db na porcie : 3307
+- z konsoli wejsc do katalogu projektu i wykonac polecenia  
+
+- sudo chmod -R 777 ./storage/logs/
+- sudo chmod -R 777 ./storage/framework/
+
+## 1. baza danych 
+
+### 1.1 migracja
+- php artisan migrate
+
+### 1.2 seedowanie bazy danych 
+- php artisan db:seed --class=LocaleSeeder
+- php artisan db:seed --class=CategoriesSeeder
+
+## zmiana konfiguracji (!!!)
+
+- wyedytowac plik .env , ustawic linijke na : DB_HOST=dogadamy_mysql_1  , nazwa db host to nazwa kontenera , nazwe dostaniesz z polcenia: docker-compose ps
+
+## endpointy do zadania : 
+
+- [GET] : http://localhost:82/api/categories/en
+- [POST] : http://localhost:82/api/categories/en , {'category_name' : string, 'locale': string}
+
+## Testowanie: 
+
+### Testowanie endpointow przez phpunit real connection tests (zakladam ze php jest zainstalowany w /usr/bin/php):
+- wejsc do konsoli i do katalogu projektu , uruchmic poleceniem:
+- /usr/bin/php ./vendor/phpunit/phpunit/phpunit --configuration ./phpunit.xml
+
+## Gdzie szukac podgladu logowania, tego co leci z eventu podczas tworzenia kategorii
+- ./storage/logs/laravel.log
+
+
+
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
