@@ -15,7 +15,6 @@ class CreatePelletUsageTable extends Migration
     {
         Schema::create('pellet_usage', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('add_time');
             $table->integer('bag_amount');
             $table->bigInteger('producer_id', false, true);
             $table->foreign('producer_id')->references('id')->on('pellet_producer');
