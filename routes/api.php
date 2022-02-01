@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\PelletController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ Route::group([
     'prefix' => 'restricted', // see Kernel.php routeMiddleware
 ], function ($router) {
     Route::get('/categories/{locale}', [CategoriesController::class, 'show']);
+    Route::post('/pellet/consume', [PelletController::class, 'consume']);
 }
 );
 

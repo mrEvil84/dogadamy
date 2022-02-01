@@ -176,6 +176,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\CategoriesServiceProvider::class,
+        App\Providers\PelletServiceProvider::class,
         \Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
     ],

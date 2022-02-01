@@ -4,9 +4,14 @@ namespace App\Providers;
 
 use App\Events\CreateCategoryProcessed;
 use App\Listeners\CreateCategoryNotification;
+use App\src\Pelletbox\DomainModel\Events\UnitConsumed;
+use App\src\Pelletbox\DomainModel\PelletBusHandler;
+use App\src\Pelletbox\Infrastructure\PelletEventBusHandler;
+use App\src\Pelletbox\Infrastructure\PelletEventBusLogger;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -31,6 +36,14 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Event::listen(
+            UnitConsumed::class,
+            [PelletBusHandler::class, 'consumeUnit'],
+        );
+
+        Event::listen(
+            UnitConsumed::class,
+            [PelletEventBusLogger::class, 'logConsumeUnit']
+        );
     }
 }
