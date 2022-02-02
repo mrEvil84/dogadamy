@@ -3,6 +3,7 @@
 namespace App\src\Pelletbox\DomainModel\Events;
 
 use App\src\Pelletbox\DomainModel\ValueObjects\Unit;
+use DateTime;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -15,9 +16,9 @@ final class UnitConsumed extends Event
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private Unit $unit;
-    private \DateTime $consumedAt;
+    private DateTime $consumedAt;
 
-    public function __construct(Unit $unit, \DateTime $consumedAt)
+    public function __construct(Unit $unit, DateTime $consumedAt)
     {
         $this->unit = $unit;
         $this->consumedAt = $consumedAt;
@@ -28,7 +29,7 @@ final class UnitConsumed extends Event
         return $this->unit;
     }
 
-    public function getConsumedAt(): \DateTime
+    public function getConsumedAt(): DateTime
     {
         return $this->consumedAt;
     }

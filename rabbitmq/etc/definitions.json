@@ -95,7 +95,7 @@
     {
       "source": "pellet",
       "vhost": "/",
-      "destination": "pellet.consumed",
+      "destination": "pelletconsumer",
       "destination_type": "queue",
       "routing_key": "pellet.consumed",
       "arguments": {}

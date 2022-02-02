@@ -2,78 +2,61 @@
 
 namespace App\src\Utils\rabbitmq;
 
+use App\src\Utils\rabbitmq\Exceptions\InvalidAmqpRoutingKeys;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpConnectionSettings;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpExchangeSettings;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpMessageDeliveryMode;
-use App\src\Utils\rabbitmq\ValueObjects\AmqpRoutingKey;
-use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+use App\src\Utils\rabbitmq\ValueObjects\AmqpRoutingKeys;
+use Exception;
 use PhpAmqpLib\Message\AMQPMessage;
 
-abstract class AmqpPublisher
+abstract class AmqpPublisher extends AmqpBase
 {
-    private AmqpConnectionSettings $connectionSettings;
-    private AmqpExchangeSettings $exchangeSettings;
-
-    private AMQPStreamConnection $connection;
-    private AMQPChannel $channel;
-
-    private AmqpRoutingKey $routingKey;
-    private AmqpMessageDeliveryMode $messageDeliveryMode;
-
+    /**
+     * @throws InvalidAmqpRoutingKeys
+     */
     public function __construct(
         AmqpConnectionSettings $connectionSettings,
         AmqpExchangeSettings $exchangeSettings,
         AmqpMessageDeliveryMode $messageDeliveryMode,
-        AmqpRoutingKey $routingKey
+        AmqpRoutingKeys $routingKeys
     ) {
-        $this->connectionSettings = $connectionSettings;
-        $this->exchangeSettings = $exchangeSettings;
-        $this->messageDeliveryMode = $messageDeliveryMode;
-        $this->routingKey = $routingKey;
+        if ($routingKeys->count() !== 1) {
+            throw InvalidAmqpRoutingKeys::invalidRoutingKeysCount();
+        }
+        parent::__construct(
+            $connectionSettings,
+            $exchangeSettings,
+            $messageDeliveryMode,
+            $routingKeys
+        );
     }
 
     abstract public static function getInstance(): self;
 
-    final public function publish(string $message): void
+    /**
+     * @throws Exception
+     */
+    final public function publish(string $msg): void
     {
         $this->setConnection();
         $this->channel = $this->connection->channel();
         $this->setExchange();
 
         $message = new AMQPMessage(
-            $message,
-            ['delivery_mode' => $this->messageDeliveryMode->getDeliveryMode()]
+            $msg,
+            [
+                'delivery_mode' => $this->messageDeliveryMode->getDeliveryMode()
+            ]
         );
 
         $this->channel->basic_publish(
             $message,
             $this->exchangeSettings->getExchangeName(),
-            $this->routingKey->getRoutingKey()
+            $this->routingKeys->offsetGet(0)
         );
 
         $this->channel->close();
         $this->connection->close();
-    }
-
-    private function setConnection(): void
-    {
-        $this->connection = new AMQPStreamConnection(
-            $this->connectionSettings->getHost(),
-            $this->connectionSettings->getPort(),
-            $this->connectionSettings->getUser(),
-            $this->connectionSettings->getPassword()
-        );
-    }
-
-    private function setExchange(): void
-    {
-        $this->channel->exchange_declare(
-            $this->exchangeSettings->getExchangeName(),
-            $this->exchangeSettings->getExchangeType(),
-            $this->exchangeSettings->isPassive(),
-            $this->exchangeSettings->isDurable(),
-            $this->exchangeSettings->isAutoDelete()
-        );
     }
 }
