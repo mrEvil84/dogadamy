@@ -38,7 +38,7 @@ class EventServiceProvider extends ServiceProvider
     {
         Event::listen(
             UnitConsumed::class,
-            [PelletBusHandler::class, 'consumeUnit'],
+            [PelletBusHandler::class, 'handleConsumeUnit'],
         );
 
         Event::listen(

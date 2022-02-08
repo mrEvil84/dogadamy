@@ -6,6 +6,7 @@ use App\src\Utils\rabbitmq\Exceptions\InvalidAmqpRoutingKeys;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpConnectionSettings;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpExchangeSettings;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpMessageDeliveryMode;
+use App\src\Utils\rabbitmq\ValueObjects\AmqpRoutingKey;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpRoutingKeys;
 use Exception;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -49,11 +50,13 @@ abstract class AmqpPublisher extends AmqpBase
                 'delivery_mode' => $this->messageDeliveryMode->getDeliveryMode()
             ]
         );
+        /** @var AmqpRoutingKey $routingKey */
+        $routingKey = $this->routingKeys->offsetGet(0);
 
         $this->channel->basic_publish(
             $message,
             $this->exchangeSettings->getExchangeName(),
-            $this->routingKeys->offsetGet(0)
+            $routingKey->getKey()
         );
 
         $this->channel->close();

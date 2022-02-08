@@ -32,7 +32,7 @@ abstract class AmqpConsumer extends AmqpBase
             $this->channel->queue_bind(
                 $queueName,
                 $this->exchangeSettings->getExchangeName(),
-                $routingKey->getRoutingKey()
+                $routingKey->getKey()
             );
         }
 

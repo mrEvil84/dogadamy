@@ -6,7 +6,7 @@ namespace App\src\Pelletbox\DomainModel;
 
 use App\src\Pelletbox\DomainModel\ValueObjects\Unit;
 
-interface PelletBus
+interface PelletBusPublisher
 {
-    public function consumeUnit(Unit $unit, \DateTime $consumedAt): void;
+    public function publishConsumeUnit(Unit $unit, \DateTime $consumedAt): void;
 }

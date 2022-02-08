@@ -9,20 +9,20 @@ use App\src\Pelletbox\DomainModel\PelletBusHandler;
 use App\src\Utils\rabbitmq\AmqpPublisher;
 use JsonException;
 
-class  PelletEventBusHandler implements PelletBusHandler
+class PelletEventBusHandler implements PelletBusHandler
 {
-    private AmqpPublisher $publisher;
+    private AmqpPublisher $amqpPublisher;
 
-    public function __construct(AmqpPublisher $publisher)
+    public function __construct(AmqpPublisher $amqpPublisher)
     {
-        $this->publisher = $publisher;
+        $this->amqpPublisher = $amqpPublisher;
     }
 
     /**
      * @throws JsonException
      */
-    public function consumeUnit(UnitConsumed $unitConsumed): void
+    public function handleConsumeUnit(UnitConsumed $unitConsumed): void
     {
-        $this->publisher->publish($unitConsumed->getJsonEncoded());
+        $this->amqpPublisher->publish($unitConsumed->getJsonEncoded());
     }
 }

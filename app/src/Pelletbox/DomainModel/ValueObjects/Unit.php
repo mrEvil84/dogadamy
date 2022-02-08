@@ -2,18 +2,27 @@
 
 namespace App\src\Pelletbox\DomainModel\ValueObjects;
 
+use App\src\Pelletbox\Exceptions\InvalidDataStructure;
 use App\src\Pelletbox\Exceptions\InvalidValueException;
 
-final class Unit
+final class Unit implements Validator, Initializer
 {
+    use StructureValidator;
+
     public const DEFAULT_UNIT_WEIGHT = 15;
     public const DEFAULT_UNIT_COUNT = 1;
 
+    private const REQUIRED_STRUCTURE_KEYS = ['unitCount', 'unitWeight', 'producer'];
+
+    private Producer $producer;
     private int $unitCount;
     private int $unitWeight;
 
-    public function __construct(int $unitCount = self::DEFAULT_UNIT_COUNT, int $unitWeight = self::DEFAULT_UNIT_WEIGHT)
-    {
+    public function __construct(
+        Producer $producer,
+        int $unitCount = self::DEFAULT_UNIT_COUNT,
+        int $unitWeight = self::DEFAULT_UNIT_WEIGHT
+    ) {
         if ($unitCount <= 0) {
             throw new InvalidValueException('Invalid unit count.');
         }
@@ -22,6 +31,7 @@ final class Unit
             throw new InvalidValueException('Invalid unit weight.');
         }
 
+        $this->producer = $producer;
         $this->unitCount = $unitCount;
         $this->unitWeight = $unitWeight;
     }
@@ -40,7 +50,37 @@ final class Unit
     {
         return [
             'unitCount' => $this->unitCount,
-            'unitWeight' => $this->unitWeight
+            'unitWeight' => $this->unitWeight,
+            'producer' => $this->producer->toArray(),
         ];
+    }
+
+    /**
+     * @throws InvalidDataStructure
+     */
+    public static function validate(array $dataStructure): void
+    {
+        if (!self::isValid($dataStructure, self::REQUIRED_STRUCTURE_KEYS)) {
+            throw new InvalidDataStructure('Invalid data structure for Unit ');
+        }
+    }
+
+    /**
+     * @throws InvalidDataStructure
+     * @throws InvalidValueException
+     */
+    public static function fromRawData(array $rawData): Initializer
+    {
+        self::validate($rawData);
+        Producer::validate($rawData['producer']); // todo: producer extract to const
+
+        return new self(
+            new Producer(
+                (int)$rawData['producer']['id'],
+                $rawData['producer']['name']
+            ),
+            (int)$rawData['unitCount'],
+            (int)$rawData['unitWeight']
+        );
     }
 }

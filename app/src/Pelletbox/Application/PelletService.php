@@ -3,17 +3,22 @@
 namespace App\src\Pelletbox\Application;
 
 use App\src\Pelletbox\Application\Command\Consume;
-use App\src\Pelletbox\DomainModel\PelletBus;
+use App\src\Pelletbox\DomainModel\PelletBusPublisher;
+use App\src\Pelletbox\DomainModel\StoreRepository;
 use App\src\Pelletbox\DomainModel\ValueObjects\Unit;
 use App\src\Pelletbox\Exceptions\InvalidValueException;
 
 class PelletService
 {
-    private PelletBus $pelletBus;
+    private PelletBusPublisher $pelletBus;
+    private StoreRepository $storeRepository;
 
-    public function __construct(PelletBus $pelletBus)
-    {
+    public function __construct(
+        PelletBusPublisher $pelletBus,
+        StoreRepository $storeRepository
+    ) {
         $this->pelletBus = $pelletBus;
+        $this->storeRepository = $storeRepository;
     }
 
     /**
@@ -21,9 +26,15 @@ class PelletService
      */
     public function consumeUnit(Consume $command): void
     {
-        $this->pelletBus->consumeUnit(
+        $this->pelletBus->publishConsumeUnit(
             new Unit($command->getUnitCount(), $command->getUnitWeight()),
             $command->getConsumeDate()
         );
+    }
+
+    public function storeUnit(Store $command): void
+    {
+        $this->storeRepository->store();
+
     }
 }

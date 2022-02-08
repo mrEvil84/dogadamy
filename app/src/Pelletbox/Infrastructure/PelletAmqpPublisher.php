@@ -23,6 +23,7 @@ class PelletAmqpPublisher extends AmqpPublisher
      */
     public static function getInstance(): AmqpPublisher
     {
+        // todo: extract settings to utils class
         $connectionSettings = new AmqpConnectionSettings(
             host: env('AMQP_HOST', 'localhost'),
             port: (int)env('AMQP_PORT', 5672),

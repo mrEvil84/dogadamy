@@ -20,7 +20,7 @@ final class AmqpRoutingKey
         $this->routingKey = $routingKey;
     }
 
-    public function getRoutingKey(): string
+    public function getKey(): string
     {
         return $this->routingKey;
     }
