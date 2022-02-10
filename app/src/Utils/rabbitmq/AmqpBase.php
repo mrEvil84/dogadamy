@@ -32,8 +32,6 @@ abstract class AmqpBase
         $this->routingKeys = $routingKeys;
     }
 
-    abstract public static function getInstance(): self;
-
     protected function setConnection(): void
     {
         $this->connection = new AMQPStreamConnection(

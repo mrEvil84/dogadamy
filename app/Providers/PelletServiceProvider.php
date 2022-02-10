@@ -8,7 +8,7 @@ use App\src\Pelletbox\Application\PelletService;
 use App\src\Pelletbox\DomainModel\PelletBusPublisher;
 use App\src\Pelletbox\DomainModel\PelletBusHandler;
 use App\src\Pelletbox\Infrastructure\PelletAmqpPublisher;
-use App\src\Pelletbox\Infrastructure\PelletEventBusPublisherPublisher;
+use App\src\Pelletbox\Infrastructure\PelletEventBusPublisher;
 use App\src\Pelletbox\Infrastructure\PelletEventBusHandler;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +19,7 @@ class PelletServiceProvider extends ServiceProvider
         // singleton - object created only once in app , and hold the state
         // bind - object created ech time it is called , reusable classes and object
         $this->app->singleton(PelletAmqpPublisher::class, function ($app) {
+
             return PelletAmqpPublisher::getInstance();
         });
 
@@ -27,7 +28,7 @@ class PelletServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(PelletBusPublisher::class, function ($app) {
-            return new PelletEventBusPublisherPublisher();
+            return new PelletEventBusPublisher();
         });
 
         $this->app->bind(PelletService::class, function ($app) {

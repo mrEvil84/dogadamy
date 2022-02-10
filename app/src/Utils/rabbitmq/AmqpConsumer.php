@@ -11,9 +11,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 abstract class AmqpConsumer extends AmqpBase
 {
-    abstract public static function getInstance(): self;
-
-    abstract public static function process(AMQPMessage $message): void;
+    abstract public function process(AMQPMessage $message): void;
 
     /**
      * @throws ErrorException

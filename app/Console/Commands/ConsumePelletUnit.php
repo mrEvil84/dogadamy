@@ -11,7 +11,7 @@ class ConsumePelletUnit extends Command
      *
      * @var string
      */
-    protected $signature = 'command:consume-pellet-unit {routing.key}';
+    protected $signature = 'pellet:consume-unit {routing.key?}';
 
     /**
      * The console command description.
@@ -37,6 +37,9 @@ class ConsumePelletUnit extends Command
      */
     public function handle()
     {
+        $routingKey = $this->argument('routing.key') ?? 'pellet.consumed';
+
+        echo 'todo: consume' . PHP_EOL;
         return 0;
     }
 }

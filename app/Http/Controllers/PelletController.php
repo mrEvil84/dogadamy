@@ -24,7 +24,7 @@ class PelletController extends Controller
         $command = new Consume();
 
         try {
-            $this->service->consumeUnit($command);
+            $this->service->publishUnit($command);
 
         } catch (\Exception $exception) {
             return response()->json(['error_message' => $exception->getMessage()], 400);

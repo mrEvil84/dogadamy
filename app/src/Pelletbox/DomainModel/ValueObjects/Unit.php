@@ -12,7 +12,10 @@ final class Unit implements Validator, Initializer
     public const DEFAULT_UNIT_WEIGHT = 15;
     public const DEFAULT_UNIT_COUNT = 1;
 
-    private const REQUIRED_STRUCTURE_KEYS = ['unitCount', 'unitWeight', 'producer'];
+    private const UNIT_COUNT = 'unitCount';
+    private const UNIT_WEIGHT = 'unitWeight';
+    private const PRODUCER = 'producer';
+    private const REQUIRED_STRUCTURE_KEYS = [self::UNIT_COUNT, self::UNIT_WEIGHT, self::PRODUCER];
 
     private Producer $producer;
     private int $unitCount;
@@ -46,6 +49,11 @@ final class Unit implements Validator, Initializer
         return $this->unitWeight;
     }
 
+    public function getProducer(): Producer
+    {
+        return $this->producer;
+    }
+
     public function toArray(): array
     {
         return [
@@ -69,18 +77,14 @@ final class Unit implements Validator, Initializer
      * @throws InvalidDataStructure
      * @throws InvalidValueException
      */
-    public static function fromRawData(array $rawData): Initializer
+    public static function fromRawData(array $rawData): self
     {
         self::validate($rawData);
-        Producer::validate($rawData['producer']); // todo: producer extract to const
 
         return new self(
-            new Producer(
-                (int)$rawData['producer']['id'],
-                $rawData['producer']['name']
-            ),
-            (int)$rawData['unitCount'],
-            (int)$rawData['unitWeight']
+            Producer::fromRawData($rawData[self::PRODUCER]),
+            (int)$rawData[self::UNIT_COUNT],
+            (int)$rawData[self::UNIT_WEIGHT]
         );
     }
 }

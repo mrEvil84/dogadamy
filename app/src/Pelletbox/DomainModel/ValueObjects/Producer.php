@@ -5,14 +5,16 @@ namespace App\src\Pelletbox\DomainModel\ValueObjects;
 use App\src\Pelletbox\Exceptions\InvalidDataStructure;
 use App\src\Pelletbox\Exceptions\InvalidValueException;
 
-final class Producer implements Validator
+final class Producer implements Validator, Initializer
 {
     use StructureValidator;
 
     private int $id;
     private string $name;
 
-    private const REQUIRED_STRUCTURE_KEYS = ['id', 'name'];
+    public const ID = 'id';
+    public const NAME = 'name';
+    private const REQUIRED_STRUCTURE_KEYS = [self::ID, self::NAME];
 
     /**
      * @throws InvalidValueException
@@ -39,8 +41,8 @@ final class Producer implements Validator
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            self::ID => $this->id,
+            self::NAME => $this->name,
         ];
     }
 
@@ -52,5 +54,19 @@ final class Producer implements Validator
         if (!self::isValid($dataStructure, self::REQUIRED_STRUCTURE_KEYS)) {
             throw new InvalidDataStructure('Invalid data structure for Producer ');
         }
+    }
+
+    /**
+     * @throws InvalidDataStructure
+     * @throws InvalidValueException
+     */
+    public static function fromRawData(array $rawData): self
+    {
+        self::validate($rawData);
+
+        return new self(
+            (int)$rawData[self::ID],
+            $rawData[self::NAME]
+        );
     }
 }

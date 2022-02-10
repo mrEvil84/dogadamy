@@ -13,8 +13,10 @@ class Consume
     private int $unitWeight;
     private \DateTime $consumeDate;
 
-    public function __construct(int $unitCount = self::DEFAULT_UNIT_COUNT, int $unitWeight = self::DEFAULT_UNIT_WEIGHT)
-    {
+    public function __construct(
+        int $unitCount = self::DEFAULT_UNIT_COUNT,
+        int $unitWeight = self::DEFAULT_UNIT_WEIGHT
+    ) {
         $this->unitCount = $unitCount;
         $this->unitWeight = $unitWeight;
         $this->consumeDate = new \DateTime('now');

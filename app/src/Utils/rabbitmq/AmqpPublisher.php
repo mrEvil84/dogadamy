@@ -33,8 +33,6 @@ abstract class AmqpPublisher extends AmqpBase
         );
     }
 
-    abstract public static function getInstance(): self;
-
     /**
      * @throws Exception
      */
