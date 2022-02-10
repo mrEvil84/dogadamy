@@ -6,6 +6,7 @@ namespace App\src\Categories\Infrastructure;
 
 use App\src\Categories\ReadModel\CategoriesReadModelRepository;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Support\Facades\DB;
 
 class CategoriesReadModelDbRepository implements CategoriesReadModelRepository
 {

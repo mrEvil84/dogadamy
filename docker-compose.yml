@@ -1,7 +1,7 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    laravel.test:
+    webserwer:
         build:
             context: ./vendor/laravel/sail/runtimes/8.0
             dockerfile: Dockerfile
@@ -41,6 +41,19 @@ services:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+    rabbitmq:
+        image: rabbitmq:3-management
+        hostname: rabbit-pelletbox
+        volumes:
+            - ./rabbitmq/etc/definitions.json:/etc/rabbitmq/definitions.json
+            - ./rabbitmq/etc/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf  # konfiguracja
+            - ./rabbitmq/data:/var/lib/rabbitmq/mnesia/rabbit@my-rabbit # dane rabbitmq, baza danych
+            - ./rabbitmq/logs:/var/log/rabbitmq/log # katalog z logami rabbitmq
+        ports:
+            - 5672:5672
+            - 15672:15672
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
