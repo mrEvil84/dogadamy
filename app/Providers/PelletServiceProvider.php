@@ -11,7 +11,7 @@ use App\src\Pelletbox\DomainModel\PelletBusHandler;
 use App\src\Pelletbox\DomainModel\StoreRepository;
 use App\src\Pelletbox\Infrastructure\PelletAmqpConsumer;
 use App\src\Pelletbox\Infrastructure\PelletAmqpPublisher;
-use App\src\Pelletbox\Infrastructure\PelletDbRepository;
+use App\src\Pelletbox\Infrastructure\PelletDbRepositoryProxy;
 use App\src\Pelletbox\Infrastructure\PelletEventBusPublisher;
 use App\src\Pelletbox\Infrastructure\PelletEventBusHandler;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +39,7 @@ class PelletServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(StoreRepository::class, function ($app) {
-            return new PelletDbRepository(
+            return new PelletDbRepositoryProxy(
                 DB::connection()
             );
         });

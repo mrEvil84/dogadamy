@@ -38,9 +38,7 @@ abstract class AmqpPublisher extends AmqpBase
      */
     final public function publish(string $msg): void
     {
-        $this->setConnection();
-        $this->channel = $this->connection->channel();
-        $this->setExchange();
+        //$this->setExchange();
 
         $message = new AMQPMessage(
             $msg,

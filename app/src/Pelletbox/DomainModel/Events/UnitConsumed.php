@@ -46,6 +46,7 @@ final class UnitConsumed extends Event
     {
         return json_encode(
             $this->unit->toArray(),
-         JSON_THROW_ON_ERROR);
+            JSON_THROW_ON_ERROR
+        );
     }
 }

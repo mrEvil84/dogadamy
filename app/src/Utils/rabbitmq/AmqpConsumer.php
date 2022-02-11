@@ -19,11 +19,7 @@ abstract class AmqpConsumer extends AmqpBase
      */
     final public function consume(string $queue = ''): void
     {
-        $this->setConnection();
-        $this->channel = $this->connection->channel();
-        $this->setExchange();
-
-
+        $queueName = '';
         if ($queue === '') {
             [$queueName, ,] = $this->channel->queue_declare(
                 "",
