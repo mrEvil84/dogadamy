@@ -17,13 +17,25 @@ abstract class AmqpConsumer extends AmqpBase
      * @throws ErrorException
      * @throws Exception
      */
-    final public function consume(): void
+    final public function consume(string $queue = ''): void
     {
         $this->setConnection();
         $this->channel = $this->connection->channel();
         $this->setExchange();
 
-        [$queueName, ,] = $this->channel->queue_declare("", false, true, true, false);
+
+        if ($queue === '') {
+            [$queueName, ,] = $this->channel->queue_declare(
+                "",
+                false,
+                true,
+                true,
+                false
+            );
+        } else {
+            $queueName = $queue;
+        }
+
 
         /** @var AmqpRoutingKey $routingKey */
         foreach ($this->routingKeys as $routingKey) {
@@ -48,7 +60,6 @@ abstract class AmqpConsumer extends AmqpBase
             $this->channel->wait();
         }
 
-        $this->channel->close();
-        $this->connection->close();
+        $this->closeConnection();
     }
 }

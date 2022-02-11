@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace App\src\Pelletbox\Infrastructure;
 
 use App\src\Pelletbox\DomainModel\Consumer;
-use App\src\Pelletbox\DomainModel\StoreRepository;
-use App\src\Pelletbox\DomainModel\ValueObjects\Unit;
-use App\src\Pelletbox\Exceptions\InvalidDataStructure;
-use App\src\Pelletbox\Exceptions\InvalidValueException;
 use App\src\Utils\rabbitmq\AmqpConsumer;
 use App\src\Utils\rabbitmq\AmqpConsumerProcessor;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpConnectionSettings;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpExchangeSettings;
+use App\src\Utils\rabbitmq\ValueObjects\AmqpExchangeType;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpMessageDeliveryMode;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpRoutingKey;
 use App\src\Utils\rabbitmq\ValueObjects\AmqpRoutingKeys;
+use ErrorException;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class PelletAmqpConsumer extends AmqpConsumer implements Consumer
@@ -42,33 +40,26 @@ class PelletAmqpConsumer extends AmqpConsumer implements Consumer
     }
 
 
-    public static function getInstance(
-        AmqpConnectionSettings $connectionSettings,
-        AmqpExchangeSettings $exchangeSettings,
-        AmqpMessageDeliveryMode $messageDeliveryMode,
-        AmqpRoutingKeys $routingKeys,
-        AmqpConsumerProcessor $consumerProcessor
+    public static function getInstance(AmqpConsumerProcessor $consumerProcessor): self {
 
-    ): self {
+        $connectionSettings = new AmqpConnectionSettings(
+            host: env('AMQP_HOST'),
+            port: (int)env('AMQP_PORT', 5672),
+            user: env('AMQP_USER', 'msgProducer'),
+            password: env('AMQP_USER_PASS', 'secret')
+        );
 
-//        new AmqpRoutingKeys([$routingKey])
-//        $connectionSettings = new AmqpConnectionSettings(
-//            host: env('AMQP_HOST', 'localhost'),
-//            port: (int)env('AMQP_PORT', 5672),
-//            user: env('AMQP_USER', 'msgProducer'),
-//            password: env('AMQP_USER_PASS', 'secret')
-//        );
-//
-//        $exchangeSettings = new AmqpExchangeSettings(
-//            env('PELLET_EXCHANGE_NAME', 'pellet'),
-//            AmqpExchangeType::TOPIC,
-//            false,
-//            true,
-//            false
-//        );
-//
-//        $routingKey = new AmqpRoutingKey(routingKey: env('PELLET_CONSUME_QUEUE_ROUTE', 'pellet.consumed'));
-//        $messageDeliveryMode = new AmqpMessageDeliveryMode(AMQPMessage::DELIVERY_MODE_PERSISTENT);
+        $exchangeSettings = new AmqpExchangeSettings(
+            env('PELLET_EXCHANGE_NAME', 'pellet'),
+            AmqpExchangeType::TOPIC,
+            false,
+            true,
+            false
+        );
+
+        $routingKey = new AmqpRoutingKey(routingKey: env('PELLET_CONSUME_QUEUE_ROUTE', 'pellet.consumed'));
+        $routingKeys = new AmqpRoutingKeys([$routingKey]);
+        $messageDeliveryMode = new AmqpMessageDeliveryMode(AMQPMessage::DELIVERY_MODE_PERSISTENT);
 
         return new self(
             $connectionSettings,
@@ -84,8 +75,11 @@ class PelletAmqpConsumer extends AmqpConsumer implements Consumer
         $this->consumerProcessor->process($message);
     }
 
-    public function consumeMessage(AMQPMessage $message): void
+    /**
+     * @throws ErrorException
+     */
+    public function consumeMessage(string $queueName): void
     {
-       $this->process($message);
+        $this->consume($queueName);
     }
 }

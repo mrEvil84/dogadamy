@@ -21,11 +21,12 @@ abstract class AmqpBase
     protected AmqpMessageDeliveryMode $messageDeliveryMode;
 
     public function __construct(
-        AmqpConnectionSettings $connectionSettings,
-        AmqpExchangeSettings $exchangeSettings,
+        AmqpConnectionSettings  $connectionSettings,
+        AmqpExchangeSettings    $exchangeSettings,
         AmqpMessageDeliveryMode $messageDeliveryMode,
-        AmqpRoutingKeys $routingKeys
-    ) {
+        AmqpRoutingKeys         $routingKeys
+    )
+    {
         $this->connectionSettings = $connectionSettings;
         $this->exchangeSettings = $exchangeSettings;
         $this->messageDeliveryMode = $messageDeliveryMode;
@@ -53,7 +54,7 @@ abstract class AmqpBase
         );
     }
 
-    public function __destruct()
+    protected function closeConnection(): void
     {
         $this->channel->close();
         $this->connection->close();
