@@ -7,14 +7,14 @@ use App\src\Pelletbox\DomainModel\ValueObjects\Unit;
 use App\src\Pelletbox\Exceptions\InvalidDataStructure;
 use App\src\Pelletbox\Exceptions\InvalidValueException;
 use App\src\Utils\rabbitmq\AmqpConsumerProcessor;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\ConnectionInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class PelletDbRepository implements StoreRepository, AmqpConsumerProcessor
 {
-    private DB $dbHandler;
+    private ConnectionInterface $dbHandler;
 
-    public function __construct(DB $dbHandler)
+    public function __construct(ConnectionInterface $dbHandler)
     {
         $this->dbHandler = $dbHandler;
     }
@@ -28,21 +28,23 @@ class PelletDbRepository implements StoreRepository, AmqpConsumerProcessor
     {
         $messageBody = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR);
         $this->store(Unit::fromRawData($messageBody));
+        $message->ack();
     }
 
     public function store(Unit $unit): void
     {
         $sql = '
                 INSERT INTO
-                     pellet_usage (bag_amount, producer_id)
+                     pelletbox.pellet_usage (bag_amount, producer_id, created_at)
                 VALUES
-                    (:bagAmount, :producerId)';
+                    (:bagAmount, :producerId, :createdAt)';
 
         $this->dbHandler->insert(
             $sql,
             [
                 'bagAmount' => $unit->getUnitCount(),
-                'producerId' => $unit->getProducer()->getId()
+                'producerId' => $unit->getProducer()->getId(),
+                'createdAt' => date('Y-m-d H:i:s'),
             ]
         );
     }

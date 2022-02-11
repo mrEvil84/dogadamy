@@ -13,7 +13,7 @@ use App\src\Categories\ReadModel\CategoriesReadModelRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
-class CategoriesServiceProvider extends ServiceProvider
+class   CategoriesServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.

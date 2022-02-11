@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\src\Pelletbox\DomainModel\Consumer;
 use Illuminate\Console\Command;
 
 class ConsumePelletUnit extends Command
@@ -11,23 +12,25 @@ class ConsumePelletUnit extends Command
      *
      * @var string
      */
-    protected $signature = 'pellet:consume-unit {routing.key?}';
+    protected $signature = 'pellet:consume-unit {queue.name?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Consume pellet logs from pellet broker by routing key \'pellet.consumed\'';
+    protected $description = 'Consume pellet logs from pellet broker by queue name \'pellet.consumed\'';
 
+    private Consumer $consumer;
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Consumer $consumer)
     {
         parent::__construct();
+        $this->consumer = $consumer;
     }
 
     /**
@@ -37,9 +40,11 @@ class ConsumePelletUnit extends Command
      */
     public function handle()
     {
-        $routingKey = $this->argument('routing.key') ?? 'pellet.consumed';
+        $queueName = $this->argument('queue.name') ?? 'pellet.consumed';
 
-        echo 'todo: consume' . PHP_EOL;
+        echo 'Consuming: ... ' . PHP_EOL;
+        $this->consumer->consumeMessage($queueName);
+        echo 'Stop consuming ... ' . PHP_EOL;
         return 0;
     }
 }

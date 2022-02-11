@@ -21,28 +21,29 @@ abstract class AmqpBase
     protected AmqpMessageDeliveryMode $messageDeliveryMode;
 
     public function __construct(
-        AmqpConnectionSettings $connectionSettings,
-        AmqpExchangeSettings $exchangeSettings,
+        AmqpConnectionSettings  $connectionSettings,
+        AmqpExchangeSettings    $exchangeSettings,
         AmqpMessageDeliveryMode $messageDeliveryMode,
-        AmqpRoutingKeys $routingKeys
+        AmqpRoutingKeys         $routingKeys
     ) {
         $this->connectionSettings = $connectionSettings;
         $this->exchangeSettings = $exchangeSettings;
         $this->messageDeliveryMode = $messageDeliveryMode;
         $this->routingKeys = $routingKeys;
-    }
 
-    protected function setConnection(): void
-    {
         $this->connection = new AMQPStreamConnection(
             $this->connectionSettings->getHost(),
             $this->connectionSettings->getPort(),
             $this->connectionSettings->getUser(),
             $this->connectionSettings->getPassword()
         );
+
+        $this->channel = $this->connection->channel();
+
+        $this->setExchange();
     }
 
-    protected function setExchange(): void
+    private function setExchange(): void
     {
         $this->channel->exchange_declare(
             $this->exchangeSettings->getExchangeName(),
@@ -53,7 +54,7 @@ abstract class AmqpBase
         );
     }
 
-    public function __destruct()
+    protected function closeConnection(): void
     {
         $this->channel->close();
         $this->connection->close();

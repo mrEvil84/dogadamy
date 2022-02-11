@@ -64,6 +64,14 @@ final class Unit implements Validator, Initializer
     }
 
     /**
+     * @throws \JsonException
+     */
+    public function __toString(): string
+    {
+        return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+    }
+
+    /**
      * @throws InvalidDataStructure
      */
     public static function validate(array $dataStructure): void

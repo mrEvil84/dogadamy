@@ -44,9 +44,9 @@ final class UnitConsumed extends Event
      */
     public function getJsonEncoded(): string
     {
-        return json_encode([
-            'unit' => $this->unit->toArray(),
-            'consumedAt' => $this->consumedAt,
-        ], JSON_THROW_ON_ERROR);
+        return json_encode(
+            $this->unit->toArray(),
+            JSON_THROW_ON_ERROR
+        );
     }
 }

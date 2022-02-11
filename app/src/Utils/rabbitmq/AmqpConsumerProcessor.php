@@ -6,5 +6,5 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 interface AmqpConsumerProcessor
 {
-    public function process(AMQPMessage $message);
+    public function process(AMQPMessage $message): void;
 }

@@ -47,6 +47,18 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
+        'pellet-db-logger-processed' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/pellet-db-processed.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
+        'pellet-db-logger-inserted' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/pellet-db-inserted.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

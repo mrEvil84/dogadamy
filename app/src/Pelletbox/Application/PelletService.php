@@ -10,7 +10,6 @@ use App\src\Pelletbox\DomainModel\StoreRepository;
 use App\src\Pelletbox\DomainModel\ValueObjects\Producer;
 use App\src\Pelletbox\DomainModel\ValueObjects\Unit;
 use App\src\Pelletbox\Exceptions\InvalidValueException;
-use PhpAmqpLib\Message\AMQPMessage;
 
 class PelletService
 {
@@ -48,8 +47,8 @@ class PelletService
         $this->storeRepository->store($command->getUnit());
     }
 
-    public function consume(AMQPMessage $message): void
+    public function consume(string $queueName): void
     {
-        $this->consumer->consume($message);
+        $this->consumer->consumeMessage($queueName);
     }
 }

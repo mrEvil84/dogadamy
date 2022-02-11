@@ -44,8 +44,32 @@
 ## Gdzie szukac podgladu logowania, tego co leci z eventu podczas tworzenia kategorii
 - ./storage/logs/laravel.log
 
+## 2. rabbit mq 
 
+### 2.1 Copy env
 
+```bash
+cp .env.pellet_box .env
+```
+
+### 2.2 Testowanie publishera (dane testowe)
+```
+curl --location --request POST 'http://localhost:82/api/restricted/pellet/consume' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODJcL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2NDM3Mjg2MjcsImV4cCI6MTY0MzczMjIyNywibmJmIjoxNjQzNzI4NjI3LCJqdGkiOiIwYmRQQ05GUlIwOExVY1h6Iiwic3ViIjoxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.nQl0EBYjZOjXDcKOrjTlRocp5vI3oMKA0sYHW3V9Kv8' \
+--form 'name="Piotr Kowerzanow"' \
+--form 'email="piotr.kowerzanow@gmail.com"' \
+--form 'password="admin1234"' \
+--form 'password_confirmation="admin1234"'
+```
+
+### 2.3 Testowanie consumera
+- docker exec -it pellet-box_webserwer_1 bash
+- php artisan pellet:consume-unit
+ 
+- docker exec -it pellet-box_mysql_1 bash
+- mysql -u sail -p 
+- pass is : password
+- select * from pelletbox.pellet_usage;
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>

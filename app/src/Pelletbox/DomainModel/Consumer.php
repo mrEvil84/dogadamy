@@ -8,5 +8,5 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 interface Consumer
 {
-    public function consumeMessage(AMQPMessage $message): void;
+    public function consumeMessage(string $queueName): void;
 }
