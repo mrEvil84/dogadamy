@@ -59,7 +59,11 @@ curl --location --request POST 'http://localhost:82/api/restricted/pellet/consum
 ### 2.2 Testowanie consumera
 - docker exec -it pellet-box_webserwer_1 bash
 - php artisan pellet:consume-unit
-
+ 
+- docker exec -it pellet-box_mysql_1 bash
+- mysql -u sail -p 
+- pass is : password
+- select * from pelletbox.pellet_usage;
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
