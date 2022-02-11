@@ -44,7 +44,21 @@
 ## Gdzie szukac podgladu logowania, tego co leci z eventu podczas tworzenia kategorii
 - ./storage/logs/laravel.log
 
+## 2. rabbit mq 
 
+### 2.1 Testowanie publishera (dane testowe)
+```
+curl --location --request POST 'http://localhost:82/api/restricted/pellet/consume' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODJcL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2NDM3Mjg2MjcsImV4cCI6MTY0MzczMjIyNywibmJmIjoxNjQzNzI4NjI3LCJqdGkiOiIwYmRQQ05GUlIwOExVY1h6Iiwic3ViIjoxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.nQl0EBYjZOjXDcKOrjTlRocp5vI3oMKA0sYHW3V9Kv8' \
+--form 'name="Piotr Kowerzanow"' \
+--form 'email="piotr.kowerzanow@gmail.com"' \
+--form 'password="admin1234"' \
+--form 'password_confirmation="admin1234"'
+```
+
+### 2.2 Testowanie consumera
+- docker exec -it pellet-box_webserwer_1 bash
+- php artisan pellet:consume-unit
 
 
 
