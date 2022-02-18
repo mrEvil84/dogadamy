@@ -34,13 +34,15 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         volumes:
-            - 'sailmysql:/var/lib/mysql'
+            - 'sailmysql:/var/lib/mysql/'
         networks:
             - sail
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+        logging:
+            driver: 'json-file'
     rabbitmq:
         image: rabbitmq:3-management
         hostname: rabbit-pelletbox
