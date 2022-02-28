@@ -14,7 +14,14 @@ use App\src\Pelletbox\Infrastructure\PelletAmqpPublisher;
 use App\src\Pelletbox\Infrastructure\PelletDbRepositoryProxy;
 use App\src\Pelletbox\Infrastructure\PelletEventBusPublisher;
 use App\src\Pelletbox\Infrastructure\PelletEventBusHandler;
+use App\src\Pelletbox\Infrastructure\PelletReadModelDbRepository;
+use App\src\Pelletbox\Infrastructure\PelletReadModelRedisRepository;
+use App\src\Pelletbox\Infrastructure\PelletReadModelStorageRepository;
+use App\src\Pelletbox\Infrastructure\PelletRedisRepository;
+use App\src\Pelletbox\ReadModel\PelletReadModel;
+use App\src\Pelletbox\ReadModel\PelletReadModelRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\ServiceProvider;
 
 class PelletServiceProvider extends ServiceProvider
@@ -28,9 +35,14 @@ class PelletServiceProvider extends ServiceProvider
             return PelletAmqpPublisher::getInstance();
         });
 
+        $this->app->bind(PelletRedisRepository::class, function ($app) {
+            return new PelletRedisRepository(Redis::connection());
+        });
+
         $this->app->bind(PelletBusHandler::class, function ($app) {
             return new PelletEventBusHandler(
-                resolve(PelletAmqpPublisher::class)
+                resolve(PelletAmqpPublisher::class),
+                resolve(PelletRedisRepository::class)
             );
         });
 
@@ -55,6 +67,29 @@ class PelletServiceProvider extends ServiceProvider
                 resolve(PelletBusPublisher::class),
                 resolve(StoreRepository::class),
                 resolve(Consumer::class)
+            );
+        });
+
+        $this->app->bind(PelletReadModelDbRepository::class, function ($app) {
+            return new PelletReadModelDbRepository(DB::connection());
+        });
+
+        $this->app->bind(PelletReadModelRedisRepository::class, function ($app) {
+            return new PelletReadModelRedisRepository(
+                Redis::connection()
+            );
+        });
+
+        $this->app->bind(PelletReadModelRepository::class, function ($app) {
+            return new PelletReadModelStorageRepository(
+                resolve(PelletReadModelDbRepository::class),
+                resolve(PelletReadModelRedisRepository::class)
+            );
+        });
+
+        $this->app->bind(PelletReadModel::class, function ($app) {
+            return new PelletReadModel(
+                resolve(PelletReadModelRepository::class)
             );
         });
     }

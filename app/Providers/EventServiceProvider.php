@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\CreateCategoryProcessed;
 use App\Listeners\CreateCategoryNotification;
+use App\src\Pelletbox\DomainModel\Events\PelletStatsCached;
 use App\src\Pelletbox\DomainModel\Events\UnitConsumed;
 use App\src\Pelletbox\DomainModel\PelletBusHandler;
 use App\src\Pelletbox\Infrastructure\PelletEventBusHandler;
@@ -44,6 +45,11 @@ class EventServiceProvider extends ServiceProvider
         Event::listen(
             UnitConsumed::class,
             [PelletEventBusLogger::class, 'logConsumeUnit']
+        );
+
+        Event::listen(
+            PelletStatsCached::class,
+            [PelletBusHandler::class, 'handleStatsCached'],
         );
     }
 }

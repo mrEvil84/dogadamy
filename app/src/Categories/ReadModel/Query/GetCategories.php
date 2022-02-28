@@ -17,5 +17,4 @@ class GetCategories
     {
         return $this->locale;
     }
-
 }

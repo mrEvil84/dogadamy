@@ -19,7 +19,6 @@ abstract class AmqpConsumer extends AmqpBase
      */
     final public function consume(string $queue = ''): void
     {
-        $queueName = '';
         if ($queue === '') {
             [$queueName, ,] = $this->channel->queue_declare(
                 "",
@@ -32,6 +31,7 @@ abstract class AmqpConsumer extends AmqpBase
             $queueName = $queue;
         }
 
+        $queueName = $queueName ?? '';
 
         /** @var AmqpRoutingKey $routingKey */
         foreach ($this->routingKeys as $routingKey) {

@@ -64,7 +64,25 @@
         ],
         "phplint": [
             "./vendor/bin/phplint ./ --exclude=vendor"
+        ],
+        "app-start": [
+            "docker-compose -f ./docker-compose.yml up -d"
+        ],
+        "app-stop": [
+            "docker-compose -f ./docker-compose.yml stop"
+        ],
+        "app-elk-start": [
+            "docker-compose -f ./elk/docker-compose.yml -f ./elk/extensions/filebeat/filebeat-compose.yml -f ./elk/extensions/metricbeat/metricbeat-compose.yml up -d"
+        ],
+        "app-elk-stop": [
+            "docker-compose -f ./elk/docker-compose.yml -f ./elk/extensions/filebeat/filebeat-compose.yml -f ./elk/extensions/metricbeat/metricbeat-compose.yml stop"
         ]
+    },
+    "scripts-descriptions": {
+      "app-start": "App start containers",
+      "app-stop": "App stop containers",
+      "app-elk-start": "Elastic stact start containers",
+      "app-elk-stop": "Elastic stack stop containers"
     },
     "extra": {
         "laravel": {

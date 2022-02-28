@@ -59,6 +59,12 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
         ],
 
+        'added-to-redis-cache' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/added-to-redis-cache.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
