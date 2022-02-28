@@ -11,7 +11,7 @@ use App\src\Pelletbox\ReadModel\Query\GetStatsByKey;
 use App\src\Pelletbox\SharedKernel\DateKey;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\View;
 
 
 class PelletController extends Controller
@@ -40,7 +40,7 @@ class PelletController extends Controller
         return response()->json(['consumed' => true]);
     }
 
-    public function stats(): Response
+    public function stats()
     {
         $date = \DateTime::createFromFormat('Y-m-d', '2022-02-18');
         $stats = $this->pelletReadModel->getStats(
@@ -51,11 +51,6 @@ class PelletController extends Controller
             )
         );
 
-        echo '<pre>';
-        var_dump($stats->getCollection());
-        echo '</pre>';
-        die('-------------------------------------');
-
-        return response()->make('xxx');
+        return View::make('pellet/stats', ['stats' => $stats->toArray()]);
     }
 }
