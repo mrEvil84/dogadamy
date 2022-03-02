@@ -5,7 +5,7 @@ namespace App\src\Pelletbox\Infrastructure;
 use App\src\Pelletbox\DomainModel\Events\PelletStatsCached;
 use App\src\Pelletbox\DomainModel\ValueObjects\StatsCollection;
 use App\src\Pelletbox\ReadModel\PelletReadModelRepository;
-use App\src\Pelletbox\ReadModel\Query\GetStatsByKey;
+use App\src\Pelletbox\ReadModel\Query\GetStatsQuery;
 use App\src\Pelletbox\SharedKernel\Key;
 
 class PelletReadModelStorageRepository implements PelletReadModelRepository
@@ -15,7 +15,7 @@ class PelletReadModelStorageRepository implements PelletReadModelRepository
 
     public function __construct(
         PelletReadModelDbRepository $dbRepository,
-        PelletReadModelRedisRepository $redisRepository
+        PelletReadModelRedisRepository $redisRepository,
     ) {
         $this->dbRepository = $dbRepository;
         $this->redisRepository = $redisRepository;
@@ -24,7 +24,7 @@ class PelletReadModelStorageRepository implements PelletReadModelRepository
     /**
      * @throws \JsonException
      */
-    public function getStats(GetStatsByKey $query): StatsCollection
+    public function getStats(GetStatsQuery $query): StatsCollection
     {
         if ($this->redisRepository->isStatsExists($query->getKey())) {
             return $this->redisRepository->getStats($query);

@@ -4,7 +4,7 @@ namespace App\src\Pelletbox\Infrastructure;
 
 use App\src\Pelletbox\DomainModel\ValueObjects\StatsCollection;
 use App\src\Pelletbox\ReadModel\PelletReadModelRepository;
-use App\src\Pelletbox\ReadModel\Query\GetStatsByKey;
+use App\src\Pelletbox\ReadModel\Query\GetStatsQuery;
 use App\src\Pelletbox\SharedKernel\Key;
 use Illuminate\Database\ConnectionInterface;
 
@@ -17,7 +17,7 @@ class PelletReadModelDbRepository implements PelletReadModelRepository
         $this->dbHandler = $dbHandler;
     }
 
-    public function getStats(GetStatsByKey $query): StatsCollection
+    public function getStats(GetStatsQuery $query): StatsCollection
     {
         $sql = '
             SELECT

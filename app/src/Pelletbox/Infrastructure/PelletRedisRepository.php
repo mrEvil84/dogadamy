@@ -9,24 +9,23 @@ use Illuminate\Redis\Connections\PhpRedisConnection;
 class PelletRedisRepository
 {
     private PhpRedisConnection $redisConnection;
+    private PelletRedisKeyFactory $pelletRedisKeyFactory;
 
-    public function __construct(PhpRedisConnection $redisConnection)
+    public function __construct(PhpRedisConnection $redisConnection, PelletRedisKeyFactory $pelletRedisKeyFactory)
     {
         $this->redisConnection = $redisConnection;
+        $this->pelletRedisKeyFactory = $pelletRedisKeyFactory;
     }
 
     public function storeStatsCollection(StatsCollection $statsCollection): void
     {
-        $keys = array_keys($statsCollection->getCollection());
+        $dateKeys = array_keys($statsCollection->getCollection());
         $statsCollectionData = $statsCollection->toArray();
 
-        foreach ($keys as $key) {
+        foreach ($dateKeys as $key) {
 
-
-//            var_dump(json_encode($statsCollectionData[$key], JSON_THROW_ON_ERROR));
-//            die;
             $this->redisConnection->set(
-                md5('pellet:stats:' . $key),
+                $this->pelletRedisKeyFactory->getRedisStatsKeyFromDate($key),
                 json_encode($statsCollectionData[$key], JSON_THROW_ON_ERROR)
             );
         }

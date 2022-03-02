@@ -17,9 +17,11 @@ use App\src\Pelletbox\Infrastructure\PelletEventBusHandler;
 use App\src\Pelletbox\Infrastructure\PelletReadModelDbRepository;
 use App\src\Pelletbox\Infrastructure\PelletReadModelRedisRepository;
 use App\src\Pelletbox\Infrastructure\PelletReadModelStorageRepository;
+use App\src\Pelletbox\Infrastructure\PelletRedisKeyFactory;
 use App\src\Pelletbox\Infrastructure\PelletRedisRepository;
 use App\src\Pelletbox\ReadModel\PelletReadModel;
 use App\src\Pelletbox\ReadModel\PelletReadModelRepository;
+use Illuminate\Redis\Connections\PhpRedisConnection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\ServiceProvider;
@@ -36,7 +38,10 @@ class PelletServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(PelletRedisRepository::class, function ($app) {
-            return new PelletRedisRepository(Redis::connection());
+            return new PelletRedisRepository(
+                Redis::connection(),
+                new PelletRedisKeyFactory()
+            );
         });
 
         $this->app->bind(PelletBusHandler::class, function ($app) {
@@ -76,7 +81,8 @@ class PelletServiceProvider extends ServiceProvider
 
         $this->app->bind(PelletReadModelRedisRepository::class, function ($app) {
             return new PelletReadModelRedisRepository(
-                Redis::connection()
+                Redis::connection(),
+                new PelletRedisKeyFactory()
             );
         });
 

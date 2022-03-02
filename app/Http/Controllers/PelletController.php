@@ -7,8 +7,7 @@ namespace App\Http\Controllers;
 use App\src\Pelletbox\Application\Command\Consume;
 use App\src\Pelletbox\Application\PelletService;
 use App\src\Pelletbox\ReadModel\PelletReadModel;
-use App\src\Pelletbox\ReadModel\Query\GetStatsByKey;
-use App\src\Pelletbox\SharedKernel\DateKey;
+use App\src\Pelletbox\ReadModel\Query\GetStatsByDate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -43,13 +42,7 @@ class PelletController extends Controller
     public function stats()
     {
         $date = \DateTime::createFromFormat('Y-m-d', '2022-02-18');
-        $stats = $this->pelletReadModel->getStats(
-            new GetStatsByKey(
-                new DateKey(
-                    $date
-                )
-            )
-        );
+        $stats = $this->pelletReadModel->getStats(new GetStatsByDate($date));
 
         return View::make('pellet/stats', ['stats' => $stats->toArray()]);
     }
