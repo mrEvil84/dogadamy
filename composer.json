@@ -11,9 +11,9 @@
         "laravel/framework": "^8.77",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "tymon/jwt-auth": "dev-develop",
         "php-amqplib/php-amqplib": ">=3.0",
-        "ext-amqp": "*"
+        "tecnickcom/tcpdf": "^6.4",
+        "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -92,7 +92,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

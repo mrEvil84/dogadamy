@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::get('/pellet/stats', [PelletController::class, 'stats']);
+Route::get('/pellet/test', [PelletController::class, 'test']);

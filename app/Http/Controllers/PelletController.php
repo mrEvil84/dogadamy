@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\src\Invoices\pdf\InvoicePdfBuilder;
+use App\src\Invoices\pdf\InvoicesPrinter;
 use App\src\Pelletbox\Application\Command\Consume;
 use App\src\Pelletbox\Application\PelletService;
 use App\src\Pelletbox\ReadModel\PelletReadModel;
@@ -45,5 +47,17 @@ class PelletController extends Controller
         $stats = $this->pelletReadModel->getStats(new GetStatsByDate($date));
 
         return View::make('pellet/stats', ['stats' => $stats->toArray()]);
+    }
+
+    public function test()
+    {
+        $builder = new InvoicePdfBuilder();
+        $builder->build()->printToFile('test3.pdf');
+
+//        $printer = new InvoicesPrinter();
+//        $printer->print($builder->getPdf(),'test2.pdf');
+
+        die('printed-done');
+
     }
 }

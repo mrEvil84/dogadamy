@@ -32,6 +32,9 @@ class PelletEventBusHandler implements PelletBusHandler
         $this->amqpPublisher->publish($unitConsumed->getJsonEncoded());
     }
 
+    /**
+     * @throws JsonException
+     */
     public function handleStatsCached(PelletStatsCached $statsCached): void
     {
         $statsCollection = $statsCached->getStatsCollection();
