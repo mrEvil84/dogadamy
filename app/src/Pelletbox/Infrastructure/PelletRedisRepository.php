@@ -23,7 +23,6 @@ class PelletRedisRepository
         $statsCollectionData = $statsCollection->toArray();
 
         foreach ($dateKeys as $key) {
-
             $this->redisConnection->set(
                 $this->pelletRedisKeyFactory->getRedisStatsKeyFromDate($key),
                 json_encode($statsCollectionData[$key], JSON_THROW_ON_ERROR)
